@@ -5,7 +5,8 @@ Module filtered_logger
 import re
 from typing import List
 import logging
-import datetime
+from os import environ
+import mysql.connector
 
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
@@ -44,6 +45,20 @@ def get_logger() -> logging.Logger:
     logger.addHandler(stream_handler)
 
     return logger
+
+
+def get_db():
+    """Reterive a connector to the database
+    """
+    host = environ.get("PERSONAL_DATA_DB_HOST", "localhost")
+    user = environ.get("PERSONAL_DATA_DB_USERNAME", "root")
+    password = environ.get("PERSONAL_DATA_DB_PASSWORD", "")
+    database = environ.get("PERSONAL_DATA_DB_NAME")
+    connection = mysql.connector.connect(host=host,
+                                         database=database,
+                                         user=user,
+                                         password=password)
+    return connection
 
 
 class RedactingFormatter(logging.Formatter):
