@@ -47,7 +47,7 @@ def get_logger() -> logging.Logger:
     return logger
 
 
-def get_db():
+def get_db() -> mysql.connector.connection.MySQLConnection:
     """Reterive a connector to the database
     """
     host = environ.get("PERSONAL_DATA_DB_HOST", "localhost")
