@@ -37,7 +37,7 @@ class Auth:
         request: object
             request object found when http request is sent
         """
-        if request is None or request.headers.get("Authorization") is None:
+        if request is None:
             return
         return request.headers.get("Authorization")
 
