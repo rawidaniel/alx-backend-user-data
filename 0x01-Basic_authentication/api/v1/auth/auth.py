@@ -31,7 +31,7 @@ class Auth:
 
     def authorization_header(self, request=None) -> str:
         """Reterive value of Authorization header
-        
+
         Parameters
         ----------
         request: object
