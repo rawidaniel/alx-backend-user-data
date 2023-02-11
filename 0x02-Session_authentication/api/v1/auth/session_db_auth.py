@@ -25,6 +25,8 @@ class SessionDBAuth(SessionExpAuth):
           A session id for user id
         """
         session_id = super().create_session(user_id)
+        if session_id is None:
+            return
         kwargs = {'user_id': user_id, 'session_id': session_id}
         user_session = UserSession(**kwargs)
         user_session.save()
