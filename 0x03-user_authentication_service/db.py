@@ -7,6 +7,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.session import Session
 
 from user import Base, User
+from typing import TypeVar, Dict
+from sqlalchemy.exc import InvalidRequestError
+from sqlalchemy.orm.exc import NoResultFound
 
 
 class DB:
@@ -16,7 +19,7 @@ class DB:
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
-        self._engine = create_engine("sqlite:///a.db", echo=True)
+        self._engine = create_engine("sqlite:///a.db", echo=False)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
@@ -30,7 +33,7 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str):
+    def add_user(self, email: str, hashed_password: str) -> TypeVar("User"):
         """create a user in the database
 
         Parameters
@@ -48,4 +51,30 @@ class DB:
         user = User(email=email, hashed_password=hashed_password)
         self._session.add(user)
         self._session.commit()
+        return user
+
+    def find_user_by(self, **kwargs: Dict[str, str]) -> TypeVar("User"):
+        """Find user based on given arbitrary argument
+
+        Parameters
+        ---------
+        kwargs: dict
+            arbitrary keyword arguments
+
+        Returns
+        -------
+        object
+            user object
+        """
+        column = ["id",
+                  "email",
+                  "hashed_password",
+                  "session_id",
+                  "reset_token"]
+        key = [k for k in kwargs.keys()][0]
+        if key not in column:
+            raise InvalidRequestError
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if user is None:
+            raise NoResultFound
         return user
