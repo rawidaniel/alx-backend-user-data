@@ -11,6 +11,12 @@ from typing import TypeVar, Dict
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
 
+column = ["id",
+          "email",
+          "hashed_password",
+          "session_id",
+          "reset_token"]
+
 
 class DB:
     """DB class
@@ -19,7 +25,7 @@ class DB:
     def __init__(self) -> None:
         """Initialize a new DB instance
         """
-        self._engine = create_engine("sqlite:///a.db", echo=False)
+        self._engine = create_engine("sqlite:///a.db", echo=True)
         Base.metadata.drop_all(self._engine)
         Base.metadata.create_all(self._engine)
         self.__session = None
@@ -66,15 +72,29 @@ class DB:
         object
             user object
         """
-        column = ["id",
-                  "email",
-                  "hashed_password",
-                  "session_id",
-                  "reset_token"]
-        key = [k for k in kwargs.keys()][0]
-        if key not in column:
-            raise InvalidRequestError
+
+        for key in kwargs.keys():
+            if key not in column:
+                raise InvalidRequestError
         user = self._session.query(User).filter_by(**kwargs).first()
         if user is None:
             raise NoResultFound
         return user
+
+    def update_user(self, user_id: int, **kwargs: Dict[str, str]) -> None:
+        """update user based on given arbitrary argument
+
+        Parameters
+        ---------
+        user_id:int
+            user id
+        kwargs: dict
+            arbitrary keyword arguments
+        """
+        user = self.find_user_by(id=user_id)
+        for key, value in kwargs.items():
+            if key not in column:
+                raise ValueError
+            setattr(user, key, value)
+        self._session.commit()
+        return
