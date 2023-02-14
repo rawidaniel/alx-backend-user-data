@@ -22,11 +22,13 @@ def home():
 def users():
     """
     """
-    print("************")
     email = request.form.get("email")
     password = request.form.get("password")
-    print(email, password)
-    return f"{email} {password}"
+    try:
+        AUTH.register_user(email, password)
+        return jsonify({"email": f"{email}", "message": "user created"}), 200
+    except Exception:
+        return jsonify({"message": "email already registered"}), 400
 
 
 if __name__ == "__main__":
