@@ -140,5 +140,5 @@ class Auth:
         user_id: int
             user id
         """
-        self._db.update_user(user_id, {"session_id": None})
+        self._db.update_user(user_id, session_id=None)
         return
