@@ -10,10 +10,10 @@ from user import User
 import uuid
 
 
-# def _generate_uuid() -> str:
-#     """Generate random number of id
-#     """
-#     return str(uuid.uuid4())
+def _generate_uuid() -> str:
+    """Generate random number of id
+    """
+    return str(uuid.uuid4())
 
 
 def _hash_password(password: str) -> bytes:
