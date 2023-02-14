@@ -91,6 +91,8 @@ class Auth:
     def create_session(self, email: str) -> str:
         """Create session id
 
+        Parameters
+        ----------
         email: str
             user email
 
@@ -105,5 +107,27 @@ class Auth:
             kwargs = {"session_id": session_id}
             self._db.update_user(user.id, **kwargs)
             return session_id
+        except Exception:
+            return
+
+    def get_user_from_session_id(self, session_id: str) -> User:
+        """Reterive user object based on provided session id
+
+        Parameters
+        ----------
+        session_id: str
+            session id stored for specific user
+
+        Returns
+        -------
+        object
+            user object or None
+        """
+        if session_id is None:
+            return
+        kwargs = {"session_id": session_id}
+        try:
+            user = self._db.find_user_by(**kwargs)
+            return user
         except Exception:
             return
