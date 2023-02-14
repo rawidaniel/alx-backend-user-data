@@ -36,6 +36,7 @@ class Auth:
 
     def register_user(self, email: str, password: str) -> User:
         """Register user into database
+
         Parameters
         ---------
         email: str
@@ -56,3 +57,26 @@ class Auth:
             hased_password = _hash_password(password)
             user = self._db.add_user(email, hased_password)
         return user
+
+    def valid_login(self, email: str, password: str) -> bool:
+        """ Validate the login credential
+
+        Parameters
+        ---------
+        email: str
+            user email
+        password: str
+            user password
+
+        Returns
+        -------
+        bool
+            True if user provide valid credential or False
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+            if user:
+                return bcrypt.checkpw(password.encode("utf-8"),
+                                      user.hashed_password)
+        except Exception:
+            return False
