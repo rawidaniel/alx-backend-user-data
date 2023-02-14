@@ -59,7 +59,7 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs: Dict[str, str]) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """Find user based on given arbitrary argument
 
         Parameters
@@ -70,9 +70,8 @@ class DB:
         Returns
         -------
         object
-            user object
+            user object or raise error
         """
-
         for key in kwargs.keys():
             if key not in column:
                 raise InvalidRequestError
