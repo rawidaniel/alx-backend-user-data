@@ -39,7 +39,7 @@ class DB:
             self.__session = DBSession()
         return self.__session
 
-    def add_user(self, email: str, hashed_password: str) -> User:
+    def add_user(self, email: str, hashed_password: str):
         """create a user in the database
 
         Parameters
@@ -59,7 +59,7 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, **kwargs) -> User:
+    def find_user_by(self, **kwargs):
         """Find user based on given arbitrary argument
 
         Parameters
