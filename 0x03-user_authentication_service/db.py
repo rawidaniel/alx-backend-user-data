@@ -71,7 +71,7 @@ class DB:
         -------
         object
             user object or raise error
-        """
+c        """
         for key in kwargs.keys():
             if key not in column:
                 raise InvalidRequestError
