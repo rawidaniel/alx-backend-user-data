@@ -3,8 +3,11 @@
 Module app
 Basic Flask app
 """
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
+from auth import Auth
 
+
+AUTH = Auth()
 app = Flask(__name__)
 
 
@@ -13,6 +16,17 @@ def home():
     """Home route
     """
     return jsonify({"message": "Bienvenue"})
+
+
+@app.route("/users", methods=["POST"], strict_slashes=False)
+def users():
+    """
+    """
+    print("************")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    print(email, password)
+    return f"{email} {password}"
 
 
 if __name__ == "__main__":
