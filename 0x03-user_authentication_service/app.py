@@ -66,9 +66,22 @@ def profile():
     """
     session_id = request.cookies.get('session_id')
     user = AUTH.get_user_from_session_id(session_id)
-    if user is None:
+    if user:
+        return jsonify({"email": user.email}), 200
+    else:
         abort(403)
-    return jsonify({"email": user.email}), 200
+
+
+@app.route("/reset_password", methods=["POST"], strict_slashes=False)
+def get_reset_password_token():
+    """Generate password reset token
+    """
+    email = request.form.get("email")
+    session_id = AUTH.create_session(email)
+    if not session_id:
+        abort(403)
+    token = AUTH.get_reset_password_token(email)
+    return jsonify({"email": f"{email}", "reset_token": f"{token}"}), 200
 
 
 if __name__ == "__main__":
