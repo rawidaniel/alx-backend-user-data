@@ -125,9 +125,8 @@ class Auth:
         """
         if session_id is None:
             return
-        kwargs = {"session_id": session_id}
         try:
-            user = self._db.find_user_by(**kwargs)
+            user = self._db.find_user_by(session_id=session_id)
             return user
         except Exception:
             return
