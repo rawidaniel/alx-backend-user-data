@@ -151,8 +151,8 @@ class Auth:
             user email
 
         Returns
-        -------
-        str
+        ------hashed_password = _hash_password(password)
+        self._db.update_user(user.id, hashed_password=hashed_password, )
             token generated b _generte_uuid function
         """
         try:
@@ -161,4 +161,23 @@ class Auth:
             user = self._db.update_user(user.id, reset_token=token)
             return token
         except Exception:
+            raise ValueError
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """Update password
+
+        Parameters
+        ----------
+        reset_token: str
+            token id
+        password: str
+            user password
+        """
+        try:
+            user = self._db.find_user_by(reset_token=reset_token)
+            hashed_password = _hash_password(password)
+            self._db.update_user(user.id,
+                                 hashed_password=hashed_password,
+                                 reset_token=None)
+        except NoResultFound:
             raise ValueError
