@@ -43,7 +43,7 @@ def login():
     valid_password = AUTH.valid_login(email, password)
     if not valid_password:
         abort(401)
-    response = jsonify({"email": f"email", "message": "logged in"})
+    response = jsonify({"email": f"{email}", "message": "logged in"})
     response.set_cookie("session_id", session_id)
     return response
 
